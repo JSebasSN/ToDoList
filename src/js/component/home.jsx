@@ -1,24 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 
 //include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 const Home = () => {
+	const [listaTarea, setlistaTarea] = useState([]);
+	const [tareas, setTareas] = useState('')
+
+	const handlekeyDown = (event) => {
+		if (event.key === 'Enter') {
+			const text = tareas.trim();
+			if (text !== '') {
+				setlistaTarea([...listaTarea, text])
+				setTareas('')
+			}
+		}
+	}
+
+	const handleDelete = (index) => {
+		const newTasks = listaTarea.filter((_, taskIndex) => taskIndex !== index);
+		setlistaTarea(newTasks);
+	};
+	const tasksLeft = listaTarea.length
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="baseLista">
+			<div className="lista">
+				<input type="text" placeholder="Que Necesitas Hacer?" value={tareas} onChange={(e) => setTareas(e.target.value)} onKeyDown={handlekeyDown} />
+				<div className="pendientes">
+					{listaTarea.map((text, index) => (
+						<div className="txt">
+							<div className="estiloTarea" key={index}>{text}</div>
+							<button className="delete-button" onClick={() => handleDelete(index)}>X</button>
+						</div>
+
+
+					))}
+
+				</div>
+				<div className="footer">{tasksLeft} tarea{tasksLeft !== 1 ? 's' : ''} restantes</div>
+			</div>
 		</div>
 	);
 };
